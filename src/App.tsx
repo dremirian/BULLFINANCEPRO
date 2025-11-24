@@ -35,82 +35,52 @@ function DashboardContent() {
     return <LoginPage />;
   }
 
-  const getSectionTitle = () => {
-    const titles: Record<string, string> = {
-      dashboard: 'Dashboard',
-      'bank-accounts': 'Contas Bancárias',
-      'bank-movements': 'Movimentações Bancárias',
-      'accounts-receivable': 'Contas a Receber',
-      'accounts-payable': 'Contas a Pagar',
-      'cash-flow': 'Fluxo de Caixa',
-      invoices: 'Notas Fiscais',
-      expenses: 'Despesas',
-      customers: 'Clientes',
-      suppliers: 'Fornecedores',
-      products: 'Produtos',
-      transactions: 'Transações',
-      dre: 'DRE',
-      reports: 'Relatórios',
-      alerts: 'Alertas',
-      settings: 'Configurações',
-    };
-    return titles[activeSection] || 'Dashboard';
+  const titles: Record<string, string> = {
+    dashboard: 'Dashboard',
+    'bank-accounts': 'Contas Bancárias',
+    'bank-movements': 'Movimentações Bancárias',
+    'accounts-receivable': 'Contas a Receber',
+    'accounts-payable': 'Contas a Pagar',
+    'cash-flow': 'Fluxo de Caixa',
+    invoices: 'Notas Fiscais',
+    expenses: 'Despesas',
+    customers: 'Clientes',
+    suppliers: 'Fornecedores',
+    products: 'Produtos',
+    transactions: 'Transações',
+    dre: 'DRE',
+    reports: 'Relatórios',
+    alerts: 'Alertas',
+    settings: 'Configurações',
   };
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        return <DashboardHome />;
-      case 'bank-accounts':
-        return <BankAccounts />;
-      case 'bank-movements':
-        return <BankMovements />;
-      case 'accounts-receivable':
-        return <AccountsReceivable />;
-      case 'accounts-payable':
-        return <AccountsPayable />;
-      case 'cash-flow':
-        return <CashFlow />;
-      case 'invoices':
-        return <Invoices />;
-      case 'expenses':
-        return <Expenses />;
-      case 'customers':
-        return <Customers />;
-      case 'products':
-        return <Products />;
-      case 'dre':
-        return <DREDashboard />;
-      case 'reports':
-        return <Reports />;
-      case 'alerts':
-        return <AlertsDashboard />;
-      case 'suppliers':
-        return <Suppliers />;
-      case 'transactions':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Transações</h2>
-            <p className="text-gray-600 mt-2">Em desenvolvimento</p>
-          </div>
-        );
-      case 'bank-accounts':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Contas Bancárias</h2>
-            <p className="text-gray-600 mt-2">Em desenvolvimento</p>
-          </div>
-        );
-      case 'settings':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Configurações</h2>
-            <p className="text-gray-600 mt-2">Em desenvolvimento</p>
-          </div>
-        );
-      default:
-        return <DashboardHome />;
-    }
+  const sections: Record<string, JSX.Element> = {
+    dashboard: <DashboardHome />,
+    'bank-accounts': <BankAccounts />,
+    'bank-movements': <BankMovements />,
+    'accounts-receivable': <AccountsReceivable />,
+    'accounts-payable': <AccountsPayable />,
+    'cash-flow': <CashFlow />,
+    invoices: <Invoices />,
+    expenses: <Expenses />,
+    customers: <Customers />,
+    products: <Products />,
+    dre: <DREDashboard />,
+    reports: <Reports />,
+    alerts: <AlertsDashboard />,
+    suppliers: <Suppliers />,
+    transactions: (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold text-gray-900">Transações</h2>
+        <p className="text-gray-600 mt-2">Em desenvolvimento</p>
+      </div>
+    ),
+    settings: (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold text-gray-900">Configurações</h2>
+        <p className="text-gray-600 mt-2">Em desenvolvimento</p>
+      </div>
+    ),
   };
 
   return (
@@ -121,8 +91,8 @@ function DashboardContent() {
         onLogout={signOut}
       />
       <div className="flex-1 ml-64 flex flex-col min-h-screen">
-        <DashboardHeader title={getSectionTitle()} userEmail={user.email} />
-        <main className="flex-1 p-8">{renderContent()}</main>
+        <DashboardHeader title={titles[activeSection] || 'Dashboard'} userEmail={user.email} />
+        <main className="flex-1 p-8">{sections[activeSection] || <DashboardHome />}</main>
         <footer className="bg-white border-t border-gray-200 py-6 px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
