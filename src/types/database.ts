@@ -14,6 +14,16 @@ export interface Company {
   updated_at: string;
 }
 
+export interface PaymentMethod {
+  id: string;
+  company_id: string;
+  name: string;
+  type: 'debit' | 'credit' | 'pix' | 'boleto' | 'cash' | 'transfer' | 'check' | 'outros';
+  icon: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 export interface Customer {
   id: string;
   company_id: string;
@@ -103,6 +113,7 @@ export interface Expense {
   payment_date?: string;
   status: 'pending' | 'paid' | 'overdue';
   payment_method?: string;
+  payment_method_id?: string;
   notes?: string;
   created_at: string;
   updated_at: string;
@@ -147,6 +158,7 @@ export interface AccountReceivable {
   payment_date?: string;
   status: 'pending' | 'received' | 'overdue';
   payment_method?: string;
+  payment_method_id?: string;
   installment_number?: number;
   total_installments?: number;
   parent_id?: string;
@@ -167,6 +179,7 @@ export interface AccountPayable {
   payment_date?: string;
   status: 'pending' | 'paid' | 'overdue';
   payment_method?: string;
+  payment_method_id?: string;
   installment_number?: number;
   total_installments?: number;
   parent_id?: string;
@@ -206,6 +219,7 @@ export interface BankMovement {
   date: string;
   description: string;
   category_id?: string;
+  payment_method_id?: string;
   reconciled: boolean;
   reconciliation_date?: string;
   reference_type?: 'receivable' | 'payable' | 'transfer';
