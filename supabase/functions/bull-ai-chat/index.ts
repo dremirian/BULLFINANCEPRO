@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
 const SYSTEM_CONTEXT = `Você é o Bull, o assistente financeiro inteligente da plataforma Bull Finance.
 
@@ -90,29 +89,48 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    console.log('Bull AI Chat - Iniciando processamento');
+    console.log('GEMINI_API_KEY configurada:', !!GEMINI_API_KEY);
+
     if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY não configurada');
+      console.error('GEMINI_API_KEY não encontrada');
+      return new Response(
+        JSON.stringify({ 
+          response: 'Ops! Parece que a configuração da minha IA ainda não foi feita. Por favor, configure a GEMINI_API_KEY nas secrets do Supabase. 🐂'
+        }),
+        {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
     }
 
     const { message, conversationHistory = [] } = await req.json();
+    console.log('Mensagem recebida:', message);
 
     if (!message || typeof message !== 'string') {
       throw new Error('Mensagem inválida');
     }
 
-    const contents = [
-      {
-        role: 'user',
-        parts: [{ text: SYSTEM_CONTEXT }]
-      },
-      ...conversationHistory,
-      {
-        role: 'user',
-        parts: [{ text: message }]
-      }
-    ];
+    const contents = [];
+    
+    if (conversationHistory.length > 0) {
+      contents.push(...conversationHistory.slice(-6));
+    }
+    
+    contents.push({
+      role: 'user',
+      parts: [{ text: `${SYSTEM_CONTEXT}\n\nPergunta do usuário: ${message}` }]
+    });
 
-    const geminiResponse = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+    console.log('Chamando Gemini API...');
+    
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const geminiResponse = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,16 +164,32 @@ Deno.serve(async (req: Request) => {
       }),
     });
 
+    console.log('Gemini Response Status:', geminiResponse.status);
+
     if (!geminiResponse.ok) {
       const errorText = await geminiResponse.text();
       console.error('Gemini API Error:', errorText);
-      throw new Error(`Gemini API Error: ${geminiResponse.status}`);
+      
+      return new Response(
+        JSON.stringify({ 
+          response: 'Ops! Estou com um problema temporário para processar sua mensagem. Verifique se a GEMINI_API_KEY está correta. Por favor, tente novamente em instantes! 🐂',
+          debug: errorText.substring(0, 200)
+        }),
+        {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
     }
 
     const geminiData = await geminiResponse.json();
+    console.log('Resposta recebida do Gemini');
     
     const response = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 
-                     'Desculpe, não consegui processar sua pergunta. Tente reformular!';
+                     'Desculpe, não consegui processar sua pergunta. Tente reformular! 🐂';
 
     return new Response(
       JSON.stringify({ response }),
