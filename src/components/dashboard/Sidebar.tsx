@@ -16,6 +16,8 @@ import {
   PieChart,
   Building2,
   ArrowLeftRight,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -23,6 +25,8 @@ interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
   onLogout: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
 interface MenuGroup {
@@ -93,7 +97,7 @@ const menuGroups: MenuGroup[] = [
   },
 ];
 
-export function Sidebar({ activeSection, onSectionChange, onLogout }: SidebarProps) {
+export function Sidebar({ activeSection, onSectionChange, onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['banking', 'financial', 'sales', 'inventory', 'reports']);
 
   const toggleGroup = (groupId: string) => {
@@ -108,19 +112,22 @@ export function Sidebar({ activeSection, onSectionChange, onLogout }: SidebarPro
   };
 
   return (
-    <div className="w-64 bg-[#0a3d2c] text-white h-screen flex flex-col fixed left-0 top-0 overflow-y-auto">
-      <div className="p-6 border-b border-[#c8a35f]/20">
-        <div className="flex items-center gap-3">
+    <div className={`${isCollapsed ? 'w-20' : 'w-64'} bg-[#0a3d2c] text-white h-screen flex flex-col fixed left-0 top-0 overflow-y-auto transition-all duration-300`}>
+      <div className="p-6 border-b border-[#c8a35f]/20 relative">
+        <div className="flex items-center justify-center">
           <img
             src="/bullfinance-removebg-preview.png"
             alt="Bull Finance"
-            className="h-10 w-10 object-contain"
+            className={`${isCollapsed ? 'h-10 w-10' : 'h-16 w-16'} object-contain transition-all duration-300`}
           />
-          <div>
-            <h1 className="text-xl font-bold text-[#c8a35f]">BULL FINANCE</h1>
-            <p className="text-xs text-gray-400">Gestão Financeira</p>
-          </div>
         </div>
+        <button
+          onClick={onToggleCollapse}
+          className="absolute -right-3 top-6 bg-[#c8a35f] rounded-full p-1.5 hover:bg-[#b8934f] transition-colors shadow-lg"
+          title={isCollapsed ? 'Expandir menu' : 'Minimizar menu'}
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <X size={16} />}
+        </button>
       </div>
 
       <nav className="flex-1 px-3 py-4">
@@ -134,14 +141,15 @@ export function Sidebar({ activeSection, onSectionChange, onLogout }: SidebarPro
               <button
                 key={group.id}
                 onClick={() => onSectionChange(group.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all mb-1 ${
+                className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-all mb-1 ${
                   activeSection === group.id
                     ? 'bg-[#c8a35f] text-white shadow-lg'
                     : 'hover:bg-white/10 text-gray-300'
                 }`}
+                title={isCollapsed ? group.label : ''}
               >
                 <Icon size={20} />
-                <span className="font-medium">{group.label}</span>
+                {!isCollapsed && <span className="font-medium">{group.label}</span>}
               </button>
             );
           }
@@ -149,19 +157,20 @@ export function Sidebar({ activeSection, onSectionChange, onLogout }: SidebarPro
           return (
             <div key={group.id} className="mb-2">
               <button
-                onClick={() => toggleGroup(group.id)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
+                onClick={() => isCollapsed ? onSectionChange(group.items![0].id) : toggleGroup(group.id)}
+                className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-4 py-3 rounded-lg transition-all ${
                   isActive ? 'bg-white/10' : 'hover:bg-white/5'
                 } text-gray-300`}
+                title={isCollapsed ? group.label : ''}
               >
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
                   <Icon size={20} />
-                  <span className="font-medium">{group.label}</span>
+                  {!isCollapsed && <span className="font-medium">{group.label}</span>}
                 </div>
-                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                {!isCollapsed && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
               </button>
 
-              {isExpanded && (
+              {isExpanded && !isCollapsed && (
                 <div className="mt-1 ml-4 border-l-2 border-[#c8a35f]/30 pl-2">
                   {group.items.map((item) => {
                     const ItemIcon = item.icon;
@@ -190,10 +199,11 @@ export function Sidebar({ activeSection, onSectionChange, onLogout }: SidebarPro
       <div className="p-4 border-t border-[#c8a35f]/20">
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-500/20 transition-all text-gray-300 hover:text-red-400"
+          className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg hover:bg-red-500/20 transition-all text-gray-300 hover:text-red-400`}
+          title={isCollapsed ? 'Sair' : ''}
         >
           <LogOut size={20} />
-          <span className="font-medium">Sair</span>
+          {!isCollapsed && <span className="font-medium">Sair</span>}
         </button>
       </div>
     </div>

@@ -22,6 +22,7 @@ import { BankMovements } from './components/modules/BankMovements';
 function DashboardContent() {
   const { user, loading, signOut } = useAuth();
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   if (loading) {
     return (
@@ -89,8 +90,10 @@ function DashboardContent() {
         activeSection={activeSection}
         onSectionChange={setActiveSection}
         onLogout={signOut}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
-      <div className="flex-1 ml-64 flex flex-col min-h-screen">
+      <div className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} flex flex-col min-h-screen transition-all duration-300`}>
         <DashboardHeader title={titles[activeSection] || 'Dashboard'} userEmail={user.email} />
         <main className="flex-1 p-8">{sections[activeSection] || <DashboardHome />}</main>
         <footer className="bg-white border-t border-gray-200 py-6 px-8">
