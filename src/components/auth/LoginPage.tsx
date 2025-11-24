@@ -45,7 +45,7 @@ export function LoginPage() {
             <img
               src="/bullfinance-removebg-preview.png"
               alt="Bull Finance"
-              className="h-12 w-12 object-contain"
+              className="h-30 w-30 object-contain"
             />
             <div>
               <h1 className="text-2xl font-bold text-[#c8a35f]">BULL FINANCE</h1>
