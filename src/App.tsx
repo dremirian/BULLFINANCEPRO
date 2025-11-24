@@ -94,9 +94,9 @@ function DashboardContent() {
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
-      <div className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} flex flex-col min-h-screen transition-all duration-300`}>
+      <div className={`flex-1 ${isSidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0 flex flex-col min-h-screen transition-all duration-300`}>
         <DashboardHeader title={titles[activeSection] || 'Dashboard'} userEmail={user.email} />
-        <main className="flex-1 p-8">{sections[activeSection] || <DashboardHome />}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">{sections[activeSection] || <DashboardHome />}</main>
         <footer className="bg-white border-t border-gray-200 py-6 px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
