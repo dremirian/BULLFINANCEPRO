@@ -18,6 +18,7 @@ import { DREDashboard } from './components/modules/DREDashboard';
 import { Suppliers } from './components/modules/Suppliers';
 import { BankAccounts } from './components/modules/BankAccounts';
 import { BankMovements } from './components/modules/BankMovements';
+import { BullChat } from './components/chat/BullChat';
 
 function DashboardContent() {
   const { user, loading, signOut } = useAuth();
@@ -131,6 +132,7 @@ function DashboardContent() {
           </div>
         </footer>
       </div>
+      <BullChat />
     </div>
   );
 }

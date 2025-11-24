@@ -118,7 +118,7 @@ export function Sidebar({ activeSection, onSectionChange, onLogout, isCollapsed,
           <img
             src="/bullfinance-removebg-preview.png"
             alt="Bull Finance"
-            className={`${isCollapsed ? 'h-10 w-10' : 'h-16 w-16'} object-contain transition-all duration-300`}
+            className={`${isCollapsed ? 'h-10 w-10' : 'h-30 w-30'} object-contain transition-all duration-300`}
           />
         </div>
         <button
