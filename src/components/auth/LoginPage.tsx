@@ -47,10 +47,7 @@ export function LoginPage() {
               alt="Bull Finance"
               className="h-30 w-30 object-contain"
             />
-            <div>
-              <h1 className="text-2xl font-bold text-[#c8a35f]">BULL FINANCE</h1>
-              <p className="text-sm text-gray-300">Gestão Financeira Profissional</p>
-            </div>
+            
           </div>
 
           <div className="space-y-8">
